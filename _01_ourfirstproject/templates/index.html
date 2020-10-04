@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Our Webiste Which contains the Backend program of Django Framework</title>
+</head>
+<body>
+
+    <h1>Enter your text here you want to write</h1>
+    <form action="/analyze" method='post'><textarea name="text" id="textareaofhomepage" cols="30" rows="10" style="margin: 0px; width: 1577px; height: 233px;"></textarea> {% csrf_token %}
+        
+        <input type="checkbox" name="removepunc"> Remove Punctutations
+        
+        <input type="checkbox" name="Capatilize"> Capatilize the Whole text !!
+
+        <input type="checkbox" name="Lower">Lower case your Whole text!!
+
+
+        <input type="checkbox" name="newlineremover">Removes the New line in the text!!
+        
+        <input type="checkbox" name="extraspaceremover"> Removes the extra space
+
+
+        <input type="checkbox" name="charcount">Counts the Character in the text
+        <button type="submit">Analyze Now</button>
+    </form>
+</body>
+</html>
