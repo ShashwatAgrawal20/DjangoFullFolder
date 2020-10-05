@@ -16,9 +16,13 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 
+# Improting for Media Directory
+from django.conf import settings
+from django.conf.urls.static import static
+
 # This are working like this if the path is shop/ it will say that I don't know anything please contact the shop.urls. Then it will go to shop.urls and it will show a path("", views.index, name="ShopHome") it will say the path is {""} and run the function named as index in the views.. and show the content to the userr.And Afterwards it throw him in the shop folder{templates/shop/index.html} and run the content means show it to the user
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('shop/', include("shop.urls")),
     path('blog/', include("blog.urls")),
-]
+] + static(settings.MEDIA_URL,document_root=settings.MEDIA_ROOT)
