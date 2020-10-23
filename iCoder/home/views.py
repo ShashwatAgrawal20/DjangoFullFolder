@@ -1,5 +1,8 @@
-from django.shortcuts import render, HttpResponse
+from django.shortcuts import render, HttpResponse, redirect
 from home.models import Contact
+from django.contrib import messages
+from django.contrib.auth.models import User
+from blog.models import Post
 
 # Create your views here.
 
@@ -18,7 +21,51 @@ def contact (request):
         phone = request.POST['phone']
         content = request.POST['content']
         # Making of contact and giving the main class and giving the aurgument given in it to store the values
-        contact = Contact(name=name, email=email, phone=phone, content=content)
+        if len(name)<2 or len(email)<3 or len(phone)<10 or len(content)<5:
+            messages.error(request, "Please fill the form Correctly")
+
+        else:
+            contact = Contact(name=name, email=email, phone=phone, content=content)
         # Finally saving the contact and we can see the contact form sucessfully in the database or adimin pannel
-        contact.save()
+            contact.save()
+            messages.success(request, "Your submission has been recorded Sucessfully")
     return render(request, 'home/contact.html')
+
+def search(request):
+    query = request.GET['query']
+
+    if len(query) > 80:
+        allPosts = Post.objects.none()
+
+
+    else:
+    # allPosts = Post.objects.all()
+        allpoststitle = Post.objects.filter(title__icontains=query)
+        allpostscontent = Post.objects.filter(content__icontains=query)
+        allPosts = allpoststitle.union(allpostscontent)
+    if allPosts.count() == 0:
+        messages.error(request, "Please refine your search")
+
+    params = {'allPosts':allPosts, 'query':query}
+    return render(request, 'home/search.html', params)
+
+
+def handleSignup(request):
+    if request.method == 'POST':
+        # Get the post parameters
+        username = request.POST['username']
+        fname = request.POST['fname']
+        lname = request.POST['lname']
+        email = request.POST['email']
+        pass1 = request.POST['pass1']
+        pass2 = request.POST['pass2']
+        # Checks for erroneous inputs:
+        # Creat the user
+        myuser = User.objects.create_user(username, email, pass1)
+        myuser.first_name = fname
+        myuser.last_name = lname
+        myuser.save()
+        messages.success(request, "Your account has been sucuessfully created")
+        return redirect("home")
+    else:
+        return HttpResponse ('404 - Not Found')
