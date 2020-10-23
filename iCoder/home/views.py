@@ -1,6 +1,7 @@
-from django.shortcuts import render, HttpResponse, redirect
+from django.shortcuts import render, HttpResponse, redirect, Http404
 from home.models import Contact
 from django.contrib import messages
+from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
 from blog.models import Post
 
@@ -60,6 +61,20 @@ def handleSignup(request):
         pass1 = request.POST['pass1']
         pass2 = request.POST['pass2']
         # Checks for erroneous inputs:
+        # Means checking the user is filling the form prefectly or not or the things are right 
+
+        # Checking for the length of the username
+        if len(username) > 10:
+            messages.error(request, "Username should contains less than 10 characters or alphanumeric")
+            return redirect ('home')
+        
+        if not username.isalnum():
+            messages.error(request, "User name should be only alphanumeric")
+            return redirect('home')
+
+        if pass1 != pass2:
+            messages.error(request, "Password do not match")
+            return redirect('home')
         # Creat the user
         myuser = User.objects.create_user(username, email, pass1)
         myuser.first_name = fname
@@ -68,4 +83,29 @@ def handleSignup(request):
         messages.success(request, "Your account has been sucuessfully created")
         return redirect("home")
     else:
-        return HttpResponse ('404 - Not Found')
+        return HttpResponse(status = 404)
+
+def handleLogin(request):
+    if request.method == 'POST':
+        # Get the post parameters
+        loginusername = request.POST['loginusername']
+        loginpassword = request.POST['loginpassword']
+
+        user = authenticate(username = loginusername, password = loginpassword)
+
+        if user is not None:
+            login(request, user)
+            messages.success(request, "Successfully Logged In")
+            return redirect('home')
+        else:
+            messages.error(request, "Invalid Credentials, Please try again")
+            return redirect ('home')
+
+def handleLogout(request):
+    if request.method == 'POST':
+        logout(request)
+        messages.success(request, "Logged Out Successfully")
+        return redirect('home')
+    else:
+        return HttpResponse(status = 404)
+
