@@ -41,9 +41,14 @@ def search(request):
 
     else:
     # allPosts = Post.objects.all()
+    # Getting a search by title
         allpoststitle = Post.objects.filter(title__icontains=query)
+        # search by content
         allpostscontent = Post.objects.filter(content__icontains=query)
-        allPosts = allpoststitle.union(allpostscontent)
+        # search by author name
+        allpostsauthor = Post.objects.filter(author__icontains=query)
+        allPosts = allpoststitle.union(allpostscontent).union(allpostsauthor)
+
     if allPosts.count() == 0:
         messages.error(request, "Please refine your search")
 
@@ -102,10 +107,7 @@ def handleLogin(request):
             return redirect ('home')
 
 def handleLogout(request):
-    if request.method == 'POST':
-        logout(request)
-        messages.success(request, "Logged Out Successfully")
-        return redirect('home')
-    else:
-        return HttpResponse(status = 404)
+    logout(request)
+    messages.success(request, "Logged Out Successfully")
+    return redirect('home')
 
