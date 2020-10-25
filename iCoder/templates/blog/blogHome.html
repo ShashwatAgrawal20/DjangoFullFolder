@@ -7,6 +7,7 @@
 
 {% block body %}
 <div class="container my-3">
+  <!-- this is the front page of the /blog  -->
 <h2>All Articles by iCoder</h2>
 {% comment %} Writitng a for loop for the objects in the post means in the dictionary named as allPosts in the views.py {% endcomment %}
 {% comment %} And giving the values to the places where we have to give them for example we have given the value of the author like (Ariticle by: {{post.author}}) and we have given all the values like this the time and the content etc.{% endcomment %}
@@ -14,8 +15,9 @@
       <div class="row no-gutters border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative">
         <div class="col p-4 d-flex flex-column position-static">
           <strong class="d-inline-block mb-2 text-primary">Ariticle by: {{post.author}}</strong>
-          <h3 class="mb-0">{{post.title}}</h3>
+          <h3 class="mb-0"> <a  class ="text-dark" href="/blog/{{post.slug}}">{{post.title}}</a></h3>
           <div class="mb-1 text-muted">{{post.datetime}}</div>
+          <!-- truncatechars is usefull in hiding the bigger comnets and the bigger text in the blog post -->
           <p class="card-text mb-auto">{{post.content| truncatechars:500}}</p>
           <div class="my-2">
           <a href="{{post.slug}}" role="button" class="btn btn-primary">Continue Reading</a>

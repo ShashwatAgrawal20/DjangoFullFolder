@@ -3,6 +3,7 @@
 
 {% block title %}BlogPost{% endblock title %}
 {% block blogactive %}active{% endblock blogactive %}
+{% load humanize %}
 
 {% block body %}
 <div class="container my-3">
@@ -13,24 +14,62 @@
 </div>
 <!-- This all are the bootstrap classes -->
 <div class="container">
-  <h2>Comments</h2>
-  <form action="/blog/postComment" method="post">{% csrf_token %}
-    <div class="form-group">
-      <label for="">Post Your Comment here</label>
-      <input type="text" class="form-control" name="comment" placeholder="Enter your comment here">
-    </div>
-    <input type="hidden" name="postSno" value={{post.sno}}>
-    <button type="submit" class="btn btn-primary my-1">Submit</button>
-  </form>
+  <h2>Comments ({{comments.count}})</h2>
+  <div class="my-2">
+    {% if user.is_authenticated %}
+    <form action="/blog/postComment" method="post">{% csrf_token %}
+      <div class="form-group">
+        <label for="">Post Your Comment here</label>
+        <input type="text" class="form-control" name="comment" placeholder="Enter your comment here">
+      </div>
+      <input type="hidden" name="parentSno" value="">
+      <input type="hidden" name="postSno" value={{post.sno}}>
+      <button type="submit" class="btn btn-primary my-1">Submit</button>
+    </form>
+    {% else %}
+    <h3 class="mb-3">Login First in order to Post a commnet</h3>
+    {% endif %}
+
+  </div>
   <!-- This is grid something -->
 
+  <!-- iterating the comments as comment -->
+  <!-- this is comming form the blog/views.py as dictionary named as context  -->
   {% for comment in comments %}
 
   <div class="row my-2">
-    <div class="col-md-1"><img  class="rounded mx-auto d-block w-100 p-2 border border-dark" src="/static/image/user.png" alt=""></div>
-    <div class="col-md-11"> <b>{{comment.user.username}}</b> at {{comment.timezone}}
-    <div>{{comment.comment}}</div>
-  </div>
+    <div class="col-md-1"><img class="rounded mx-auto d-block w-100 p-2 border border-dark" src="/static/image/user.png"
+        alt="user"></div>
+
+    <!-- This div is for the comment section or the seprate comment -->
+    <div class="col-md-11"> <b>{{comment.user.username}}</b>
+      <!-- The below line is very usefull for the humanize time it shows the natural time for human like -- hours ago minutes ago -->
+      <span class="badge badge-secondary">{{comment.timezone | naturaltime}}</span>
+      <div>{{comment.comment}}</div>
+      <!-- This div is for the reply to the seprate comment -->
+      <div class="reply mx-0">
+        <a class="btn btn-sm btn-primary" data-toggle="collapse" href="#replyBox{{comment.sno}}" role="button"
+          aria-expanded="false" aria-controls="replyBox{{comment.sno}}">
+          Reply
+        </a>
+        <!-- this is important for the when the user clicks the particular comment then only that reply box should open -->
+        <div class="collapse" id="replyBox{{comment.sno}}">
+          <div class="card card-body my-3">
+            <!-- This form is inspired by the upper form of the comment -->
+            <form action="/blog/postComment" method="post">{% csrf_token %}
+              <div class="form-group">
+                <label for="comment">Post Your reply here</label>
+                <input type="text" class="form-control" name="comment" placeholder="Enter your reply here">
+                <!-- making of a empty input tag to control the the parentSno  and giving it the value of {{comment.sno}} it is very important to make the comment and the reply seprate -->
+                <input type="hidden" name="parentSno" value="{{comment.sno}}">
+              </div>
+              <input type="hidden" name="postSno" value={{post.sno}}>
+              <button type="submit" class="btn btn-primary my-1">Submit</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
   {% endfor %}
 </div>
