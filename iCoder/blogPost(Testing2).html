@@ -10,7 +10,7 @@
 <div class="container my-3">
   <h2 class="blog-post-title">{{post.title}}</h2>
   <p class="blog-post-meta">{{post.timeStamp}} by <a href="/about">{{post.author}}</a></p>
-  <p>{{post.content}}</p>
+  <p>{{post.content|safe}}</p>
   <hr>
 </div>
 <!-- This all are the bootstrap classes -->
@@ -81,21 +81,14 @@
         {% endif %}
 
         {% comment %} This is we have made a custom filter in the blog {% endcomment %}
-        
         <div>
           <div class="replies my-3">
-        {% if comment.sno in replyDict %}
             <a class="btn btn-sm btn-primary" data-toggle="collapse" href="#seereply{{comment.sno}}" role="button"
               aria-expanded="false" aria-controls="seereply{{comment.sno}}">
               See the Replies
             </a>
-            {% else %}
-          <a class="btn btn-sm btn-primary" data-toggle="collapse" href="#seereply{{comment.sno}}" role="button"
-              aria-expanded="false" aria-controls="seereply{{comment.sno}}" disabled>
-              No replies yet (Be the first one to reply)
-            </a>
 
-            {% endif %}
+
             {% for reply  in replyDict|get_val:comment.sno %}
 
             <div class="collapse" id="seereply{{comment.sno}}">

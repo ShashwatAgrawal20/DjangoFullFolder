@@ -4,9 +4,15 @@
 
 {% block contactactive %}active{% endblock contactactive %} 
 
+{% block style %}
+#contact_restriction{
+  margin-top: 40px;
+}
+{% endblock style %}
 {% block body %}
 <div class="container my-3">
 <h3>Contact iCoder Admin</h3>
+{% if user.is_authenticated %}
 <form method="post" action="/contact"> {% csrf_token %}
   <div class="form-group">
     <label for="name">Name</label>
@@ -28,4 +34,7 @@
   <button type="submit" class="btn btn-primary">Submit</button>
 </form>
 </div>
+{% else %}
+<h5 id="contact_restriction">Please login in order to contact with us (We do not share any of your information with others)</h5>
+{% endif %}
 {% endblock body %}

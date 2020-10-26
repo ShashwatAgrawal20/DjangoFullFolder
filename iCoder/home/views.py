@@ -32,6 +32,7 @@ def contact (request):
             messages.success(request, "Your submission has been recorded Sucessfully")
     return render(request, 'home/contact.html')
 
+# Handleing the search box
 def search(request):
     query = request.GET['query']
 
@@ -56,6 +57,8 @@ def search(request):
     return render(request, 'home/search.html', params)
 
 
+
+# Creating API'S for handleing Signup, Login, Logout
 def handleSignup(request):
     if request.method == 'POST':
         # Get the post parameters

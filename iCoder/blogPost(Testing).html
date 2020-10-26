@@ -10,7 +10,7 @@
 <div class="container my-3">
   <h2 class="blog-post-title">{{post.title}}</h2>
   <p class="blog-post-meta">{{post.timeStamp}} by <a href="/about">{{post.author}}</a></p>
-  <p>{{post.content}}</p>
+  <p>{{post.content|safe}}</p>
   <hr>
 </div>
 <!-- This all are the bootstrap classes -->
@@ -57,7 +57,7 @@
         </a>
         <!-- this is important for the when the user clicks the particular comment then only that reply box should open -->
         <div class="collapse" id="replyBox{{comment.sno}}">
-
+             
           <div class="card card-body my-3">
             <!-- This form is inspired by the upper form of the comment -->
             <form action="/blog/postComment" method="post">{% csrf_token %}
@@ -75,47 +75,32 @@
         {% else %}
         <a class="btn btn-sm btn-primary" data-toggle="collapse" href="#replyBox{{comment.sno}}" role="button"
           aria-expanded="false" aria-controls="replyBox{{comment.sno}}" disabled>
-          Login to Reply
+          Login toReply
         </a>
 
         {% endif %}
 
+
         {% comment %} This is we have made a custom filter in the blog {% endcomment %}
-        
-        <div>
-          <div class="replies my-3">
-        {% if comment.sno in replyDict %}
-            <a class="btn btn-sm btn-primary" data-toggle="collapse" href="#seereply{{comment.sno}}" role="button"
-              aria-expanded="false" aria-controls="seereply{{comment.sno}}">
-              See the Replies
-            </a>
-            {% else %}
-          <a class="btn btn-sm btn-primary" data-toggle="collapse" href="#seereply{{comment.sno}}" role="button"
-              aria-expanded="false" aria-controls="seereply{{comment.sno}}" disabled>
-              No replies yet (Be the first one to reply)
-            </a>
+        <div class="replies my-3">
+          {% for reply  in replyDict|get_val:comment.sno %}
+          <div class="row my-2">
 
-            {% endif %}
-            {% for reply  in replyDict|get_val:comment.sno %}
+          <div class="col-md-1"><img class="rounded mx-auto d-block w-75 p-2 border border-dark" src="/static/image/user.png"
+        alt="user"></div>
+            <div class="col-md-11"> <b>{{reply.user.username}}</b>
+              <!-- The below line is very usefull for the humanize time it shows the natural time for human like -- hours ago minutes ago -->
+              <span class="badge badge-secondary">{{reply.timezone|naturaltime}}</span>
 
-            <div class="collapse" id="seereply{{comment.sno}}">
-              <div class="row my-2">
-                <div class="col-md-1"><img class="rounded mx-auto d-block w-75 p-2 border border-dark"
-                    src="/static/image/user.png" alt="user"></div>
-
-                <div class="col-md-11"> <b>{{reply.user.username}}</b>
-                  <!-- The below line is very usefull for the humanize time it shows the natural time for human like -- hours ago minutes ago -->
-                  <span class="badge badge-secondary">{{reply.timezone|naturaltime}}</span>
-                  <div>{{reply.comment}}</div>
-                </div>
-              </div>
+              <div>{{reply.comment}}</div>
             </div>
+          </div>
             {% endfor %}
           </div>
+
         </div>
       </div>
     </div>
+    {% endfor %}
   </div>
-  {% endfor %}
-</div>
-{% endblock body %}
+  {% endblock body %}
