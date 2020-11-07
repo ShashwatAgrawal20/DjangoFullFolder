@@ -29,7 +29,7 @@ Suggestions:
           <strong class="d-inline-block mb-2 text-primary">Ariticle by: {{post.author}}</strong>
           <h3 class="mb-0">{{post.title}}</h3>
           <div class="mb-1 text-muted">{{post.datetime}}</div>
-          <p class="card-text mb-auto">{{post.content| truncatechars:500}}</p>
+          <p class="card-text mb-auto"><div class="preview"> {{post.content|safe|truncatewords:50}}</div></p>
           <div class="my-2">
           <a href="blog/{{post.slug}}" role="button" class="btn btn-primary">Continue Reading</a>
           </div>
@@ -39,3 +39,13 @@ Suggestions:
     {% endfor %}
 </div>
 {% endblock body %}
+
+{% block js %} 
+<script>
+// This is the javascript to show to the home page of the blog the limited items or the limited characters not to show the inner heading and the text just showing a prewiew of it its very important to show that and it is very easy we just used a arrow function..That's it......
+let previews = document.getElementsByClassName("preview");
+Array.from(previews).forEach((element)=>{
+  element.innerHTML = element.innerText
+});
+</script> 
+{% endblock js %}
