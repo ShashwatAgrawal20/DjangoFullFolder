@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+
+{% block contactactive %}
+active
+{% endblock contactactive %}
+
+{% block body %}
+<div class="container">
+    <form method="post">
+        <div class="form-group">
+            <label for="name">Name</label>
+            <input type="text" class="form-control" id="name" name="name" placeholder="Enter your name Here" required>
+        </div>
+
+        <div class="form-group">
+            <label for="email">Email address</label>
+            <input type="email" class="form-control" id="email" name="email" placeholder="Enter your Email Address">
+        </div>
+
+        <div class="form-group">
+            <label for="username">UserName</label>
+            <input type="text" class="form-control" id="username" name="username" placeholder="Enter your username Here"
+                required>
+        </div>
+
+        <div class="form-group">
+            <label for="lastname">LastName</label>
+            <input type="text" class="form-control" id="lastname" name="lastname" placeholder="Enter your lastname Here"
+                required>
+        </div>
+
+        <div class="form-group">
+            <label for="exampleFormControlTextarea1">Example textarea</label>
+            <textarea class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
+        </div>
+    </form>
+</div>
+{% endblock body %}
